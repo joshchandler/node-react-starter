@@ -1,14 +1,6 @@
 {
-  "name": "therapy-forms",
-  "version": "0.0.1",
-  "description": "",
+  "private": true,
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/joshchandler/therapy-forms.git"
-  },
-  "author": "Joshua Chandler <joshchandler88@gmail.com>",
-  "license": "MIT",
   "engines": {
     "node": "0.12.7",
     "npm": "2.14.2"
@@ -38,14 +30,17 @@
     "newrelic": "^1.22.0",
     "node-uuid": "1.4.3",
     "nodemailer": "1.4.0",
-    "pg": "4.4.1",
     "react": "0.13.3",
     "react-router": "0.13.3",
     "request": "2.61.0",
     "semver": "5.0.1",
+    "sqlite3": "3.0.8",
     "unidecode": "0.1.7",
     "validator": "4.0.5",
     "winston": "1.0.1"
+  },
+  "optionalDependencies": {
+    "pg": "4.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.1",

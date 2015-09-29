@@ -46,7 +46,7 @@ describe('Config', () => {
     it('should have the correct values for each database key', () => {
       let configDB = config.database;
       
-      configDB.should.have.property('client', 'postgresql');
+      configDB.should.have.property('client', 'sqlite3');
     });
   })
 });

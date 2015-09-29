@@ -30,15 +30,11 @@ export default {
     url: process.env.SITEURL,
 /*     mail: {}, */
     database: {
-      client: 'postgresql',
+      client: 'sqlite3',
       connection: {
-        host: process.env.DBHOST,
-        user: process.env.DBUSER,
-        password: process.env.DBPASS,
-        database: process.env.DBNAME,
-        charset: 'utf8'
+        filename: path.join(__dirname, 'development.db')
       },
-      debug: true
+      debug: false
     },
 
     server: {
@@ -52,15 +48,11 @@ export default {
     url: process.env.SITEURL,
 /*     mail: {}, */
     database: {
-      client: 'postgresql',
+      client: 'sqlite3',
       connection: {
-        host: process.env.TESTDBHOST,
-        user: process.env.TESTDBUSER,
-        password: process.env.TESTDBPASS,
-        database: process.env.TESTDBNAME,
-        charset: 'utf8'
+        filename: path.join(__dirname, 'test.db')
       },
-      debug: true
+      debug: false
     },
     
     server: {
