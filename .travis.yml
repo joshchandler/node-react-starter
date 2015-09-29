@@ -7,8 +7,6 @@ before_script:
   - npm install -g gulp mocha coveralls
 
 script:
-  - babel-istanbul cover ./node_modules/mocha/bin/_mocha -- test/**/*.js \
-    --compilers js:babel/register --report lcovonly \
-    --timeout 15000 --include-babel-polyfill=true && \
+  - babel-istanbul cover ./node_modules/mocha/bin/_mocha -- --compilers js:babel/register test/**/*.js --report lcovonly --timeout 15000 --include-babel-polyfill=true && \
     cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && \
     rm -rf ./coverage
