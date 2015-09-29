@@ -1,10 +1,9 @@
-sudo: false
 language: node_js
 node_js:
   - "0.12"
 
 before_script:
-  - npm install -g gulp mocha coveralls
+  - npm install -g gulp mocha coveralls && sudo apt-get install cat
 
 script:
   - babel-istanbul cover ./node_modules/mocha/bin/_mocha -- --compilers js:babel/register test/**/*.js --report lcovonly --timeout 15000 --include-babel-polyfill=true && \
