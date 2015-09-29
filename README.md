@@ -1,6 +1,6 @@
-## Therapy Forms ##
+## Node React Starter ##
 
-A site for therapists and their clients to collaborate.
+An opinionated boilerplate for full stack node development with react and flux.
 
 ```
 gem install sass
