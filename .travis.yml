@@ -2,3 +2,12 @@ sudo: false
 language: node_js
 node_js:
   - "0.12"
+
+before_script:
+  - npm install -g gulp mocha coveralls
+
+script:
+  - babel-istanbul cover _mocha -- --compilers js:babel/register test/**/*.js --timeout 15000 --include-babel-polyfill=true
+
+after_success:
+  - coveralls --verbose
