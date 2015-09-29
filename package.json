@@ -2,8 +2,9 @@
   "private": true,
   "main": "index.js",
   "engines": {
-    "node": "0.12.7",
-    "npm": "2.14.2"
+    "node": ">= 0.12",
+    "iojs": ">= 3.0",
+    "npm": ">= 2.1"
   },
   "scripts": {
     "start": "node index"
