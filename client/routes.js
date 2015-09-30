@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, DefaultRoute, NotFoundRoute } from 'react-router';
 
-import App from '../components/App';
-import LoginPage from '../components/LoginPage';
-import RegisterPage from '../components/RegisterPage';
-import NotFoundPage from '../components/NotFoundPage';
+import App from './components/App';
+import LoginPage from './components/LoginPage';
+import RegisterPage from './components/RegisterPage';
+import NotFoundPage from './components/NotFoundPage';
 
 
 export default (

@@ -6,12 +6,14 @@ import logger from 'morgan';
 import slashes from 'connect-slashes';
 import crypto from 'crypto';
 import path from 'path';
-
-import cacheControl from './cache-control';
-
-import routes from '../routes';
 import ConfigManager from '../config';
 import utils from '../utils';
+import cacheControl from './cache-control';
+
+import React from 'react';
+import Router from 'react-router';
+import routes from '../../client/routes';
+
 
 let config = ConfigManager.config;
 
@@ -68,5 +70,15 @@ export default function setupMiddleware(appInstance) {
   app.use(middleware.cacheControl('private'));
 
   // Set up Frontend routes
-  app.use(routes.frontend(middleware));
+  // app.use(routes.frontend(middleware));
+  
+  app.use((req, res, next) => {
+    let router = Router.create({location: req.url, routes: routes})
+    router.run((Handler, state) => {
+      let html = React.renderToString(<Handler />);
+      return res.render('frontend', {
+        body: html
+      });
+    });
+  });
 }

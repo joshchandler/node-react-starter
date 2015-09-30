@@ -4,6 +4,7 @@ import packageInfo from './package.json';
 
 const appRoot = path.resolve(__dirname);
 const corePath = path.resolve(appRoot, 'core/');
+const clientPath = path.resolve(appRoot, 'client/');
 
 export default {
   core: {
@@ -12,12 +13,13 @@ export default {
     paths: {
       appRoot:          appRoot,
       corePath:         corePath,
+      clientPath:       clientPath,
       subdir:           '',
       configPath:       path.resolve(__dirname),
 
       templatesPath:    path.join(corePath, '/templates/'),
-      stylesPath:       path.join(corePath, '/styles/'),
-      publicPath:       path.resolve(appRoot, 'public/'),
+      stylesPath:       path.join(clientPath, '/styles/'),
+      publicPath:       path.resolve(appRoot, 'public/')
     },
     uploads: {
       // Used by the upload API to limit uploads to images

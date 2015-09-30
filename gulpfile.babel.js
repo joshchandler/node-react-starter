@@ -5,6 +5,7 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import path from 'path';
 import minimist from 'minimist';
 import runSequence from 'run-sequence';
+import webpack from 'webpack';
 import config from './config';
 
 const $ = gulpLoadPlugins();
@@ -75,8 +76,35 @@ gulp.task('styles', ['styles:vendor'], () => {
     .pipe($.size({title: 'styles'}));
 });
 
+gulp.task('bundle', (cb) => {
+  var started = false;
+  var config = require('./webpack.config.js');
+  var bundler = webpack(config);
+  
+  function bundle(err, stats) {
+    if (err) {
+      throw new $.util.PluginError('webpack', err);
+    }
+    
+    if (argv.verbose) {
+      $.util.log('[webpack]', stats.toString({colors: true}));
+    }
+    
+    if (!started) {
+      started = true;
+      return cb();
+    }
+  }
+  
+  if (watch) {
+    bundler.watch(200, bundle);
+  } else {
+    bundler.run(bundle);
+  }
+});
+
 gulp.task('build', ['clean'], (cb) => {
-  runSequence(['assets', 'styles'], cb);
+  runSequence(['assets', 'styles', 'bundle'], cb);
 });
 
 gulp.task('serve', ['build'], () => {

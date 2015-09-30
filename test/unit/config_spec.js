@@ -20,6 +20,7 @@ describe('Config', () => {
       configPaths.should.have.keys(
         'appRoot',
         'corePath',
+        'clientPath',
         'subdir',
         'configPath',
         'templatesPath',
