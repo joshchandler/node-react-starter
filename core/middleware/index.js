@@ -77,7 +77,7 @@ export default function setupMiddleware(appInstance) {
     router.run((Handler, state) => {
       let html = React.renderToString(<Handler />);
       return res.render('frontend', {
-        body: html
+        html: html
       });
     });
   });

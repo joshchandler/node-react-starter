@@ -1,16 +1,13 @@
-import React from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import React, { Proptypes, Component } from 'react';
+import EventEmitter from 'eventemitter3';
 
 
-export default class Footer {
-  setState() {
-    viewport: canUseDOM
-  }
+export default class Footer extends Component {
+
   render() {
-    var viewport = canUseDOM ? '<p>True</p>' : '<p>False</p>';
     return (
       <div className="footer">
-        {viewport}
+
       </div>
     );
   }
