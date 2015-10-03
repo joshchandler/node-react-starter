@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import Header from '../Header';
-import Footer from '../Footer';
-import App from '../App';
+import Header from './Header';
+import Footer from './Footer';
+import App from './App';
 
-export default class RegisterPage {
+export default class RegisterPage extends Component {
   
   render() {
     return (
@@ -20,3 +20,7 @@ export default class RegisterPage {
     );
   }
 }
+
+RegisterPage.propTypes = {
+  
+};

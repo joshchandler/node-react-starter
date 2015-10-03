@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import Header from '../Header';
+import Header from './Header';
 
-export default class LoginPage {
-  
+export default class LoginPage extends Component {
   render() {
     return (
       <div className="login">
@@ -14,3 +13,7 @@ export default class LoginPage {
     );
   }
 }
+
+LoginPage.propTypes = {
+  
+};

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-export default class Header {
-  
+export default class Header extends Component {
   render() {
     return (
       <div className="header">
@@ -12,7 +11,10 @@ export default class Header {
         <li><Link to="register">Register</Link></li>
       </ul>
       </div>
-      
     );
   }
 }
+
+Header.propTypes = {
+  
+};
