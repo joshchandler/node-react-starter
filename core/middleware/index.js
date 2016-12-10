@@ -3,7 +3,6 @@ import express from 'express';
 import fs from 'fs';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
-import slashes from 'connect-slashes';
 import crypto from 'crypto';
 import path from 'path';
 import ConfigManager from '../config';
@@ -33,8 +32,8 @@ export default function setupMiddleware(appInstance) {
   // Make sure 'req.secure' is valid for proxied requests
   // (X-Forwarded-Proto header will be checked, if present)
   app.enable('trust proxy');
-  
-  // Logging configuration
+
+	// Logging configuration
   if (logging !== false) {
     if (app.get('env') !== 'development') {
       app.use(logger('combined', logging));
@@ -53,15 +52,9 @@ export default function setupMiddleware(appInstance) {
   }
   
   app.set('views', config.paths.templatesPath);
-  
-  // Add in all trailing slashes
-  app.use(slashes(true, {
-    headers: {
-      'Cache-Control': 'public, max-age=' + utils.ONE_YEAR_S
-    }
-  }));
 
-  // Body parsing
+
+	// Body parsing
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
   
@@ -73,11 +66,12 @@ export default function setupMiddleware(appInstance) {
   // app.use(routes.frontend(middleware));
   
   app.use((req, res, next) => {
-    let router = Router.create({location: req.url, routes: routes})
+    let router = Router.create({location: req.url, routes: routes});
     router.run((Handler, state) => {
       let html = React.renderToString(<Handler />);
       return res.render('frontend', {
-        html: html
+        html: html,
+				req: req,
       });
     });
   });

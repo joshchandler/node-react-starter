@@ -5,6 +5,7 @@ import Header from './Header';
 
 export default class LoginPage extends Component {
   render() {
+
     return (
       <div className="login">
         <Header />

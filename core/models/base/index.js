@@ -51,7 +51,7 @@ appBookshelf.Model = appBookshelf.Model.extend({
       this.include = _.clone(options.include);
     }
     
-    this.on('creating', this.creating, this);
+    // this.on('creating', this.creating, this);
     this.on('saving', function onSaving(model, attributes, options) {
       return Promise.resolve(self.saving(model, attributes, options)).then(function then() {
         return self.validate(model, attributes, options);
@@ -62,7 +62,7 @@ appBookshelf.Model = appBookshelf.Model.extend({
   validate() {
     return validation.validateSchema(this.tableName, this.toJSON());
   },
-  
+
   creating(newObj, attr, options) {
     if (!this.get('created_by')) {
       this.set('created_by', this.contextUser(options));
@@ -74,8 +74,6 @@ appBookshelf.Model = appBookshelf.Model.extend({
     this.attributes = this.pick(this.permittedAttributes());
     // Store the previous attributes so we can tell what was updated later
     this._updatedAttributes = newObj.previousAttributes();
-    
-    this.set('updated_by', this.contextUser(options));
   },
   
   // Base prototype properties will go here
@@ -175,21 +173,17 @@ appBookshelf.Model = appBookshelf.Model.extend({
   // Data Utility Functions
   permittedOptions() {
     // terms to whitelist for all methods.
-    return ['context', 'include', 'transacting'];
+    return ['include', 'transacting'];
   },
   
   filterData(data) {
     let permittedAttributes = this.prototype.permittedAttributes();
-    let filteredData = _.pick(data, permittedAttributes);
-    
-    return filteredData;
+    return _.pick(data, permittedAttributes);
   },
   
   filterOptions(options, methodName) {
     let permittedOptions = this.permittedOptions(methodName);
-    let filteredOptions = _.pick(options, permittedOptions);
-    
-    return filteredOptions;
+		return _.pick(options, permittedOptions);
   },
   
   // ## Model Data Functions
@@ -229,9 +223,9 @@ appBookshelf.Model = appBookshelf.Model.extend({
     });
   },
   
-  add(data, options) {
+  create(data, options) {
     data = this.filterData(data);
-    options = this.filterOptions(options, 'add');
+    options = this.filterOptions(options, 'create');
     let model = this.forge(data);
     return model.save(null, options);
   },

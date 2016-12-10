@@ -28,7 +28,7 @@ let parsePackageJson = (path, messages) => {
       }
     });
   });
-}
+};
 
 let readDir = (dir, options, depth, messages) => {
   depth = depth || 0;
@@ -79,7 +79,7 @@ let readDir = (dir, options, depth, messages) => {
       });
     }, {});
   });
-}
+};
 
 let readAll = (dir, options, depth) => {
   // Start with clean messages, pass down along traversal
@@ -95,7 +95,7 @@ let readAll = (dir, options, depth) => {
   }).catch(() => {
     return {_messages: messages};
   });
-}
+};
 
 export default {
   parsePackageJson: parsePackageJson,

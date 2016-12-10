@@ -1,5 +1,6 @@
 import path from 'path';
 import url from 'url';
+import knexfile from './knexfile';
 import packageInfo from './package.json';
 
 const appRoot = path.resolve(__dirname);
@@ -31,13 +32,7 @@ export default {
     env: 'development',
     url: process.env.SITEURL,
 /*     mail: {}, */
-    database: {
-      client: 'sqlite3',
-      connection: {
-        filename: path.join(__dirname, 'development.db')
-      },
-      debug: false
-    },
+    database: knexfile.development,
 
     server: {
       host: process.env.IP || '127.0.0.1',

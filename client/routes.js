@@ -13,8 +13,8 @@ export default (
     <DefaultRoute handler={App} />
     
     /** Authentication Pages */
-    <Route name="login" path="login/" handler={LoginPage} />
-    <Route name="register" path="register/" handler={RegisterPage} />
+    <Route name="login" path="login" handler={LoginPage} />
+    <Route name="register" path="register" handler={RegisterPage} />
     
     /** 404 Page **/
     <NotFoundRoute handler={NotFoundPage} />

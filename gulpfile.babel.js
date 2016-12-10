@@ -109,7 +109,7 @@ gulp.task('build', ['clean'], (cb) => {
 
 gulp.task('serve', ['build'], () => {
   $.nodemon({
-    exec: 'babel-node index.js',
+    exec: 'node index.js',
     ext: 'js hbs scss css',
     env: { 'NODE_ENV': 'development' },
     tasks: runSequence('build', () => {

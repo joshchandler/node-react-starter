@@ -4,14 +4,20 @@ import compress from 'compression';
 import fs from 'fs';
 import uuid from 'node-uuid';
 import _ from 'lodash';
-import logger from 'winston';
+import bodyParser from 'body-parser';
+import logger from 'morgan';
+import slashes from 'connect-slashes';
 
 import ConfigManager from './config';
 import middleware from './middleware';
 import Server from './server';
 import models from './models';
-import migration from './models/migration';
 import mailer from './mail';
+import api from './api';
+
+import React from 'react';
+import Router from 'react-router';
+import routes from '../client/routes';
 
 let config = ConfigManager.config;
 
@@ -31,15 +37,20 @@ export default () => {
     // Initialize our models
     return models.init();
   }).then(() => {
-    // Initialize migration
-    return migration.init();
-  }).then(() => {
     // Initialize mail
     return mailer.init();
   }).then(() => {
     var appHbs = hbs.create();
-    
-    // return the correct mime type for woff files
+		const logging = config.logging;
+		const corePath = config.paths.corePath;
+
+		// Strict routing
+		app.enable('strict routing');
+
+		// Add in all trailing slashes
+		app.use(slashes(false));
+
+		// return the correct mime type for woff files
     express['static'].mime.define({'application/font-woff': ['woff']});
     
     // enabled gzip compression by default
@@ -51,11 +62,58 @@ export default () => {
     // set the view engine
     app.set('view engine', 'hbs');
     app.engine('hbs', appHbs.express4({}));
-    
-    // Handles express server and routing
-    middleware(app);
-    
-    return new Server(app);
+
+		// Handles express server and routing
+    // middleware(app);
+
+		// Make sure 'req.secure' is valid for proxied requests
+		// (X-Forwarded-Proto header will be checked, if present)
+		app.enable('trust proxy');
+
+		// Logging configuration
+		if (logging !== false) {
+			if (app.get('env') !== 'development') {
+				app.use(logger('combined', logging));
+			} else {
+				app.use(logger('dev', logging));
+			}
+		}
+
+		// Static assets
+		// app.use('/content/images', storage.getStorage().serve());
+		// app.use('/public', express['static'](config.paths.publicPath, {maxAge: utils.ONE_YEAR_MS}));
+		if (process.env.NODE_ENV === ('production' || 'staging')) {
+			app.use('/public', express.static(config.paths.publicPath, {maxAge: utils.ONE_YEAR_MS}));
+		} else {
+			app.use('/public', express.static(config.paths.publicPath));
+		}
+
+		app.set('views', config.paths.templatesPath);
+
+
+		// Body parsing
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({extended: true}));
+
+		// ### Caching
+		// Frontend is cacheable
+		// app.use(middleware.cacheControl('private'));
+
+		// Register the API
+		api(app);
+
+		app.use((req, res, next) => {
+			let router = Router.create({location: req.url, routes: routes});
+			router.run((Handler, state) => {
+				let html = React.renderToString(<Handler />);
+				return res.render('frontend', {
+					html: html,
+					req: req,
+				});
+			});
+		});
+
+		return new Server(app);
   }).catch((err) => {
     logger.error(err);
   });

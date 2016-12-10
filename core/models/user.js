@@ -116,17 +116,17 @@ let User = appBookshelf.Model.extend({
     return attrs;
   },
   
-  roles() {
-    return this.belongsToMany('Role');
-  },
-  
-  hasRole(roleName) {
-    let roles = this.related('roles');
-    
-    return roles.some(function getRole(role) {
-      return role.get('name') === roleName;
-    });
-  }
+  // roles() {
+  //   return this.belongsToMany('Role');
+  // },
+  //
+  // hasRole(roleName) {
+  //   let roles = this.related('roles');
+  //
+  //   return roles.some(function getRole(role) {
+  //     return role.get('name') === roleName;
+  //   });
+  // }
 }, {
   setupFilters(options) {
     let filterObjects = {};
@@ -152,7 +152,7 @@ let User = appBookshelf.Model.extend({
   },
   
   processOptions(itemCollection, options) {
-    // @todo: there are mutliple statuses that make a user "active" or "invited" - we want to translate/map them:
+    // @todo: there are multiple statuses that make a user "active" or "invited" - we want to translate/map them:
     // @todo: * valid "active" status: active, warn-1, warn-2, warn-3, warn-4, locked
     // @todo: * valid "invited" statuses: invited, invited-pending
     
@@ -185,45 +185,13 @@ let User = appBookshelf.Model.extend({
   
   findOne(data, options) {
     let query;
-    let status;
-    let lookupRole = data.role;
-    
-    delete data.role;
-    
-    data = _.defaults(data || {}, {
-      status: 'active'
-    });
-    
-    status = data.status;
-    delete data.status;
-    
+
     options = options || {};
     options.withRelated = _.union(options.withRelated, options.include);
     data = this.filterData(data);
-    
-    // Support finding a role
-    if (lookupRole) {
-      options.withRelated = _.union(options.withRelated, ['roles']);
-      options.include = _.union(options.include, ['roles']);
-      
-      query = this.forge(data, {include: options.include});
-      
-      query.query('join', 'roles_users', 'users.id', '=', 'roles_users.id');
-      query.query('join', 'roles', 'roles_users.role_id', '=', 'roles.id');
-      query.query('where', 'roles.name', '=', lookupRole);
-    } else {
-      // We pass include to forge so that toJSON has access
-      query = this.forge(data, {include: options.include});
-    }
-    
-    if (status === 'active') {
-      query.query('whereIn', 'status', activeStates);
-    } else if (status === 'invited') {
-      query.query('whereIn', 'status', invitedStates);
-    } else if (status !== 'all') {
-      query.query('where', {status: options.status});
-    }
-    
+
+		query = this.forge(data, {include: options.include});
+
     options = this.filterOptions(options, 'findOne');
     delete options.include;
     
@@ -272,53 +240,31 @@ let User = appBookshelf.Model.extend({
     });
   },
   
-  add(data, options) {
+  create(data, options) {
     const self = this;
     let userData = this.filterData(data);
-    let roles;
 
-    options = this.filterOptions(options, 'add');
+    options = this.filterOptions(options, 'create');
     options.withRelated = _.union(options.withRelated, options.include);
-        
-    // check for too many roles
-    if (data.roles && data.roles.length > 1) {
-      return Promise.reject(new errors.ValidationError('Only one role per user is supported at the moment.'));
-    }
 
+		// TODO: Send message to url endpoint
     if (!validatePasswordLength(userData.password)) {
       return Promise.reject(new errors.ValidationError('Your password must be at least 8 characters long.'));
     }
 
-    roles = data.roles;
-    delete data.roles;
-
     return generatePasswordHash(userData.password).then(function then(hash) {
       // Assign the hashed password
       userData.password = hash;
-      
+
       return userData;
     }).then(function then(userData) {
       // Save the user with the hashed password
-      return appBookshelf.Model.add.call(self, userData, options);
+      return appBookshelf.Model.create.call(self, userData, options);
     }).then(function then(addedUser) {
       // Assign the userData to our created user so we can pass it back
       userData = addedUser;
-      // if we are given a "role" object, only pass in the role ID in place of the full object
-      return Promise.resolve(roles).then(function then(roles) {
-        roles = _.map(roles, function mapper(role) {
-          if (_.isString(role)) {
-            return parseInt(role, 10);
-          } else if (_.isNumber(role)) {
-            return role;
-          } else {
-            return parseInt(role.id, 10);
-          }
-        });
-        return addedUser.roles().attach(roles, options);
-      });
-    }).then(function then() {
-      // find and return the added user
-      return self.findOne({id: userData.id, status: 'all'}, options);
+
+			return self.findOne({id: userData.id}, options);
     });
   },
   

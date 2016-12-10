@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import chalk from 'chalk';
+import Promise from 'bluebird';
 import path from 'path';
 
 import ValidationError from './validation-error';
@@ -153,6 +154,6 @@ _.each([
   'logErrorWithRedirect'
 ], (funcName) => {
   errors[funcName] = errors[funcName].bind(errors);
-})
+});
 
 export default errors;
